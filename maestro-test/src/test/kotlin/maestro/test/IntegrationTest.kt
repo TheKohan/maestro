@@ -3136,8 +3136,43 @@ class IntegrationTest {
         )
     }
 
+    fun `Case 118 - Scroll until view is visible - no negative values allowed`() {
+        // Given
+        val commands = readCommands("118_scroll_until_visible_negative")
+        val expectedDuration = "40"
+        val expectedTimeout = "20000"
+        val info = driver { }.deviceInfo()
+
+        val elementBounds = Bounds(0, 0 + info.heightGrid, 100, 100 + info.heightGrid)
+        val driver = driver {
+            element {
+                id = "maestro"
+                bounds = elementBounds
+            }
+        }
+
+        // When
+        var scrollDuration = "0"
+        var timeout = "0"
+        Maestro(driver).use {
+            orchestra(it, onCommandMetadataUpdate = { _, metaData ->
+                scrollDuration = metaData.evaluatedCommand?.scrollUntilVisible?.scrollDuration.toString()
+                timeout = metaData.evaluatedCommand?.scrollUntilVisible?.timeout.toString()
+            }).runFlow(commands)
+        }
+
+        // Then
+        assertThat(scrollDuration).isEqualTo(expectedDuration)
+        assertThat(timeout).isEqualTo(expectedTimeout)
+        driver.assertEvents(
+            listOf(
+                Event.SwipeElementWithDirection(Point(270, 480), SwipeDirection.UP, expectedDuration.toLong()),
+            )
+        )
+    }
+
     @Test
-    fun `Case 118 - Take cropped screenshot`() {
+    fun `Case 119 - Take cropped screenshot`() {
         // Given
         val commands = readCommands("118_take_cropped_screenshot")
         val boundHeight = 100
@@ -3172,7 +3207,6 @@ class IntegrationTest {
         assert(image.width == (boundWidth * dpr))
         assert(image.height == (boundHeight * dpr))
     }
-
 
     private fun orchestra(
         maestro: Maestro,
