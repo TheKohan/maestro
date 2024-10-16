@@ -3174,7 +3174,7 @@ class IntegrationTest {
     @Test
     fun `Case 119 - Take cropped screenshot`() {
         // Given
-        val commands = readCommands("118_take_cropped_screenshot")
+        val commands = readCommands("119_take_cropped_screenshot")
         val boundHeight = 100
         val boundWidth = 100
 
@@ -3200,7 +3200,7 @@ class IntegrationTest {
                 Event.TakeScreenshot,
             )
         )
-        val file = File("118_take_cropped_screenshot_with_filename.png")
+        val file = File("119_take_cropped_screenshot_with_filename.png")
         val image = ImageIO.read(file)
 
         assert(file.exists())
